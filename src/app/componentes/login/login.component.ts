@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../servicios/auth.service';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { error } from 'console';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +17,7 @@ export class LoginComponent {
     password: ['', Validators.required, Validators.pattern('^(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&])(?=.*\\d).{8,}$')]
   })
 
-  constructor(private fb:FormBuilder){
+  constructor(private fb:FormBuilder, private authService: AuthService, private messageService: MessageService, private router: Router){
     
   }
 
@@ -25,6 +29,24 @@ export class LoginComponent {
     return this.loginForm.controls['password'];
   }
  
+  login(){
+    console.log('Login')
+    const {email, password} = this.loginForm.value;
+
+    this.authService.getUserByEmail(email as string).subscribe(
+      response => {
+        if(response.length > 0 && response[0].password === password){
+          sessionStorage.setItem('email', email as string);
+          this.router.navigate(['/home']);
+        }else{
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Email o contraeña Incorrectos'});
+        }
+      },
+      error => {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Email o contraseña incorrrectos'});
+      }
+    )
+  }
 
 }
 

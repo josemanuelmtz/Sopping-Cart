@@ -1,6 +1,12 @@
+import { AuthService } from './../../servicios/auth.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { passwordMatchValidator } from '../../shared/password-match.directives';
+import { MessageService } from 'primeng/api';
+//import { Router, response } from 'express';
+import { User } from '../../interfaces/auth';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -18,7 +24,7 @@ export class RegisterComponent {
     validators: passwordMatchValidator
   });
 
-  constructor(private fb:FormBuilder){
+  constructor(private fb:FormBuilder, private authService: AuthService, private mensaje: MessageService, private router: Router){
 
   }
 
@@ -37,5 +43,20 @@ export class RegisterComponent {
     return this.registerForm.controls['confirmPassword']
   }
 
+  enviarRegistro() {
+    const data = {...this.registerForm.value};
+    
+    delete data.confirmPassword;
+
+    this.authService.registerUser(data as User).subscribe(
+      response => {
+        console.log(response)
+        this.mensaje.add({ severity: 'succes', summary: 'Succes', detail: 'Registro agregado'});
+        this.router.navigate(['login']);
+      },
+      error => console.log(error)
+    )
+    
+  }
 
 }

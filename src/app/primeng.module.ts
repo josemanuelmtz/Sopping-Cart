@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-
+import { ToastModule } from 'primeng/toast';
 
 const modPrime: any = [
   AvatarModule,
@@ -18,7 +18,8 @@ const modPrime: any = [
   TooltipModule,
   MenuModule,
   CardModule,
-  InputTextModule
+  InputTextModule,
+  ToastModule
 
 ];
 
